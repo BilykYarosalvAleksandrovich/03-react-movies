@@ -6,6 +6,8 @@ import Loader from "./components/Loader/Loader";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import MovieModal from "./components/MovieModal/MovieModal";
 import { fetchMovies } from "./services/movieService";
+import type { Movie } from "./types";
+import type { MovieModalProps } from "./types";
 
 function App() {
   const [movies, setMovies] = useState<Movie[]>([]); // ✅ масив за замовчуванням
@@ -26,7 +28,7 @@ function App() {
     }
   };
 
-  const handleSelect = (movie) => {
+  const handleSelect = (movie: Movie) => {
     setSelected(movie);
   };
 
