@@ -1,4 +1,4 @@
-import React from "react";
+
 import type { Movie } from "../../types/movie";
 import MovieCard from "../MovieCard/MovieCard";
 import styles from "./MovieGrid.module.css"; // ✅ додаємо імпорт стилів

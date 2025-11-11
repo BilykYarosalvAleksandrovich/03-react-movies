@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
 import styles from "./MovieModal.module.css";
+import type { MovieModalProps } from "../../types/movie";
 
 const modalRoot = document.getElementById("modal-root") || document.body;
 
-const MovieModal: React.FC<MovieModalProps> = ({ movie, onClose }) => {
+const MovieModal = ({ movie, onClose }: MovieModalProps) => {
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.code === "Escape") onClose();

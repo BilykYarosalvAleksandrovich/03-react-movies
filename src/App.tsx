@@ -6,8 +6,7 @@ import Loader from "./components/Loader/Loader";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import MovieModal from "./components/MovieModal/MovieModal";
 import { fetchMovies } from "./services/movieService";
-import type { Movie } from "./types";
-import type { MovieModalProps } from "./types";
+import type { Movie } from "./types/movie";
 
 function App() {
   const [movies, setMovies] = useState<Movie[]>([]); // ✅ масив за замовчуванням
