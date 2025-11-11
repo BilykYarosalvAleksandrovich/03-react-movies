@@ -1,70 +1,65 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import type { Movie } from "../../types/movie";
 import styles from "./MovieModal.module.css";
-import type { MovieModalProps } from "../../types/movie";
 
-const modalRoot = document.getElementById("modal-root") || document.body;
+interface MovieModalProps {
+  movie: Movie;
+  onClose: () => void;
+}
 
 const MovieModal = ({ movie, onClose }: MovieModalProps) => {
+  const [visible, setVisible] = useState(false);
+
   useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.code === "Escape") onClose();
-    }
+    // Анімація відкриття
+    setVisible(true);
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
 
     document.addEventListener("keydown", onKey);
-    const prevOverflow = document.body.style.overflow;
+    const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
+      document.body.style.overflow = originalOverflow;
     };
   }, [onClose]);
 
-  function handleBackdrop(e: React.MouseEvent) {
-    if (e.target === e.currentTarget) onClose();
-  }
-
   return createPortal(
-    <div
-      className={styles.backdrop}
-      role="dialog"
-      aria-modal="true"
-      onClick={handleBackdrop}
-    >
-      <div className={styles.modal}>
+    <div className={styles.backdrop} onClick={onClose}>
+      <div
+        className={`${styles.modal} ${visible ? styles.show : ""}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
-          className={styles.closeButton}
-          aria-label="Close modal"
           onClick={onClose}
+          className={styles.closeBtn}
+          aria-label="Close"
         >
-          &times;
+          ✖
         </button>
+
         <img
+          className={styles.image}
           src={
             movie.backdrop_path
-              ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
-              : movie.poster_path
-                ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                : "https://via.placeholder.com/1280x720?text=No+Image"
+              ? `https://image.tmdb.org/t/p/w780${movie.backdrop_path}`
+              : "/placeholder.png"
           }
-          alt={movie.title || "Movie image"}
-          className={styles.image}
+          alt={movie.title}
         />
 
         <div className={styles.content}>
           <h2>{movie.title}</h2>
           <p>{movie.overview}</p>
-          <p>
-            <strong>Release Date:</strong> {movie.release_date || "Unknown"}
-          </p>
-          <p>
-            <strong>Rating:</strong> {movie.vote_average}/10
-          </p>
         </div>
       </div>
     </div>,
-    modalRoot
+    document.body
   );
 };
 

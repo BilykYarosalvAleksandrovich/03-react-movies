@@ -1,27 +1,35 @@
-
+import type { FC } from "react";
 import type { Movie } from "../../types/movie";
-import MovieCard from "../MovieCard/MovieCard";
-import styles from "./MovieGrid.module.css"; // ✅ додаємо імпорт стилів
+import styles from "./MovieGrid.module.css";
 
 interface MovieGridProps {
   movies: Movie[];
   onSelect: (movie: Movie) => void;
 }
 
-function MovieGrid({ movies, onSelect }: MovieGridProps) {
-  if (!Array.isArray(movies) || movies.length === 0) {
+const MovieGrid: FC<MovieGridProps> = ({ movies, onSelect }) => {
+  if (movies.length === 0) {
     return <p>No movies found.</p>;
   }
 
   return (
     <div className={styles.grid}>
-      {" "}
-      {/* ✅ застосовуємо модульний клас */}
-      {movies.map((movie) => (
-        <MovieCard key={movie.id} movie={movie} onSelect={onSelect} />
+      {movies.map((m) => (
+        <div key={m.id} onClick={() => onSelect(m)} className={styles.card}>
+          <img
+            className={styles.image}
+            src={
+              m.poster_path
+                ? `https://image.tmdb.org/t/p/w300${m.poster_path}`
+                : "/placeholder.png"
+            }
+            alt={m.title}
+          />
+          <h3 className={styles.title}>{m.title}</h3>
+        </div>
       ))}
     </div>
   );
-}
+};
 
 export default MovieGrid;

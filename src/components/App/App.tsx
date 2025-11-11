@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 import SearchBar from "../SearchBar/SearchBar";
 import MovieGrid from "../MovieGrid/MovieGrid";
 import Loader from "../Loader/Loader";
@@ -19,7 +19,10 @@ function App() {
       setLoading(true);
       setError(false);
       const results = await fetchMovies(query);
-      setMovies(results); // ✅ results — масив
+      setMovies(results);
+      if (results.length === 0) {
+        toast("No movies found", { icon: "🔍" });
+      }
     } catch {
       setError(true);
     } finally {
