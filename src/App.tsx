@@ -1,0 +1,55 @@
+import { useState } from "react";
+import { Toaster } from "react-hot-toast";
+import SearchBar from "./components/SearchBar/SearchBar";
+import MovieGrid from "./components/MovieGrid/MovieGrid";
+import Loader from "./components/Loader/Loader";
+import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
+import MovieModal from "./components/MovieModal/MovieModal";
+import { fetchMovies } from "./services/movieService";
+
+function App() {
+  const [movies, setMovies] = useState<Movie[]>([]); // ✅ масив за замовчуванням
+  const [selected, setSelected] = useState<Movie | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  const handleSearch = async (query: string) => {
+    try {
+      setLoading(true);
+      setError(false);
+      const results = await fetchMovies(query);
+      setMovies(results); // ✅ results — масив
+    } catch {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSelect = (movie) => {
+    setSelected(movie);
+  };
+
+  const handleClose = () => {
+    setSelected(null);
+  };
+
+  return (
+    <div>
+      <Toaster position="top-right" />
+      <SearchBar onSubmit={handleSearch} />
+
+      <main style={{ padding: "20px" }}>
+        {loading && <Loader />}
+        {error && <ErrorMessage />}
+        {!loading && !error && (
+          <MovieGrid movies={movies} onSelect={handleSelect} />
+        )}
+      </main>
+
+      {selected && <MovieModal movie={selected} onClose={handleClose} />}
+    </div>
+  );
+}
+
+export default App;
