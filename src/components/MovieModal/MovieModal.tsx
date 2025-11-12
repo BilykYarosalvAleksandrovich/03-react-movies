@@ -12,7 +12,6 @@ const MovieModal = ({ movie, onClose }: MovieModalProps) => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Анімація відкриття
     setVisible(true);
 
     const onKey = (e: KeyboardEvent) => {
@@ -55,6 +54,14 @@ const MovieModal = ({ movie, onClose }: MovieModalProps) => {
 
         <div className={styles.content}>
           <h2>{movie.title}</h2>
+
+          <p>
+            <strong>Release date:</strong> {movie.release_date}
+          </p>
+          <p>
+            <strong>Rating:</strong> ⭐ {movie.vote_average.toFixed(1)}
+          </p>
+
           <p>{movie.overview}</p>
         </div>
       </div>
